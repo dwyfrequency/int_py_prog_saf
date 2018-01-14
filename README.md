@@ -1,1 +1,1 @@
-# int_py_prog_saf
+Nothing interesting here. I'm just following along with Jessica McKellar's course Intermediate Python Programming.
