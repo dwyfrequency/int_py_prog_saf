@@ -7,38 +7,33 @@ Concepts:
     2. Parsing stuff out of html => BeautifulSoup
 """
 
-import urllib.request
+import urllib.request, os, argparse
 from urllib.parse import urljoin # converts relative links to absolute
 from bs4 import BeautifulSoup
 
-# Dowload the index page 
-base_url = "https://apod.nasa.gov/apod/archivepix.html"
-download_directory = "/home/jdwy215/intPyProg_Jess_McK/Unit6/output/"
-resp = urllib.request.urlopen(base_url).read()
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--out_dir', help='output directory for nasa images')
+    args = parser.parse_args()
 
-# For each link on the index page: 
-for link in BeautifulSoup(resp, "lxml").findAll('a'):
-    print("Following link:", link)
-    href = urljoin(base_url, link["href"])
+    # Dowload the index page 
+    base_url = "https://apod.nasa.gov/apod/archivepix.html"
+    download_directory = args.out_dir
+    resp = urllib.request.urlopen(base_url).read()
 
-    content = urllib.request.urlopen(href).read()
-    for img in BeautifulSoup(content, "lxml").findAll('img'):
-        img_href = urljoin(href, img["src"])
-        print("Downloading image:", img_href)
+    # For each link on the index page: 
+    for link in BeautifulSoup(resp, "lxml").findAll('a'):
+        print("Following link:", link)
+        href = urljoin(base_url, link["href"])
 
-        # split the image on the forward slash and take the last part
-        img_name = img_href.split("/")[-1]
-        urllib.request.urlretrieve(img_href, download_directory + img_name)
+        content = urllib.request.urlopen(href).read()
+        for img in BeautifulSoup(content, "lxml").findAll('img'):
+            img_href = urljoin(href, img["src"])
+            print("Downloading image:", img_href)
 
-# a tags start <a href> which gives us links
-# print(BeautifulSoup(resp, "lxml").findAll('a'))
+            # split the image on the forward slash and take the last part
+            img_name = img_href.split("/")[-1]
+            urllib.request.urlretrieve(img_href, os.path.join(download_directory, img_name))
 
-print(type(tags[0]))
-# print(tags[0])
-
-tag = tags[0]
-
-# calling the indiv tag with href with give us the underlying link
-print(tag["href"])
-
-
+if __name__ == "__main__":
+    main()
