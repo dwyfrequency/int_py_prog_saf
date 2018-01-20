@@ -1,14 +1,9 @@
 import urllib.request, os, argparse
 from urllib.parse import urljoin # converts relative links to absolute
 from bs4 import BeautifulSoup
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--out_dir', help='output directory for nasa images')
-    args = parser.parse_args()
-
+def scrapy(base_url, out_dir):
     # Dowload the index page 
-    base_url = "https://apod.nasa.gov/apod/archivepix.html"
+    # base_url = "https://apod.nasa.gov/apod/archivepix.html"
 
     # when creating the set, we need the trailing period or it will split into
     # letters
@@ -38,7 +33,24 @@ def main():
             print("Downloading image: {}".format(img_href))
             img_name = img_href.split("/")[-1]
             urllib.request.urlretrieve(img_href,
-                                       os.path.join(args.out_dir,img_name))
+                                       os.path.join(out_dir,img_name))
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--out_dir', help='''output directory for nasa
+                        images. Must place arg in between quotes
+                        ex: "~/myTestDir"''')
+    parser.add_argument('-u', '--url', help='''base url to visit.
+                        Must place arg in between quotes
+                        ex: "https://test.com"''')
+    args = parser.parse_args()
+
+    if args.url and args.out_dir:
+        scrapy(args.url, args.out_dir)
+    else:
+        print("""Missing command line arguments. Please use --help to see script
+              params""")
 
 if __name__ == "__main__":
     main()
