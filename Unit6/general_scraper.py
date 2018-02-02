@@ -5,7 +5,7 @@ def scrapy(base_url, out_dir):
     # Dowload the index page 
     # base_url = "https://apod.nasa.gov/apod/archivepix.html"
 
-    # when creating the set, we need the trailing period or it will split into
+    # when creating the set, we need the trailing comma or it will split into
     # letters
     to_visit = set((base_url,))
     visited = set()
